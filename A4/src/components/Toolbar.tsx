@@ -1,7 +1,21 @@
 import { h } from 'preact';
-import { addGame, deleteGame, clearGames, canAddGame, canDeleteGame, canClearGames, language, setLanguage } from '../state';
+import { addGame, deleteGame, clearGames, canAddGame, canDeleteGame, canClearGames, selectedGameIndex, games, canUndo, canRedo, setLanguage, language } from '../state';
 
 const Toolbar = () => {
+  const undo = () => {
+    const game = games.value[selectedGameIndex.value!];
+    if (game) {
+      game.undoManager.undo();
+    }
+  };
+
+  const redo = () => {
+    const game = games.value[selectedGameIndex.value!];
+    if (game) {
+      game.undoManager.redo();
+    }
+  };
+
   return (
     <div className="h-12 bg-lightgray border-b border-black p-2 w-full flex justify-between items-center">
       <div className="flex gap-2">
@@ -28,10 +42,22 @@ const Toolbar = () => {
         </button>
       </div>
       <div className="flex gap-2">
-        <button className="w-36 bg-gray-500 text-white p-2 rounded">Undo</button>
-        <button className="w-36 bg-gray-500 text-white p-2 rounded">Redo</button>
+        <button
+          className="w-36 bg-gray-500 text-white p-2 rounded"
+          onClick={undo}
+          disabled={!canUndo.value}
+        >
+          Undo
+        </button>
+        <button
+          className="w-36 bg-gray-500 text-white p-2 rounded"
+          onClick={redo}
+          disabled={!canRedo.value}
+        >
+          Redo
+        </button>
         <select 
-          className="w-36 bg-white p-2 rounded border border-black"
+          className="w-36 bg-white text-black p-2 rounded border border-black"
           value={language.value}
           onChange={(e) => setLanguage(e.currentTarget.value)}
         >

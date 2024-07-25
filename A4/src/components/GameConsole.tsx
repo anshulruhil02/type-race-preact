@@ -4,6 +4,7 @@ import TextInput from './TextInput';
 import GamePropertiesInput from './GameProperties';
 import ResetButton from './ResetButton';
 import GameProgress from './GameProgress';
+import GameProgressMatchedWords from './GameProgressMatchedWords';
 
 interface GameConsoleProps {
   gameData: {
@@ -12,18 +13,23 @@ interface GameConsoleProps {
     consoleContent: string;
     fontSize: number;
     numWords: number;
-    matchedWords: Set<string>;
+    matchedWords: Set<number>;
+    progressPercentage: number;
   };
 }
 
 const GameConsole = ({ gameData }: GameConsoleProps) => {
-  console.log('GameConsole Content:', gameData.consoleContent); // Debug log
+  const completionPercentage = (gameData.matchedWords.size / gameData.words.length) * 100;
 
   return (
     <div className="h-1/3 border border-black p-2 flex flex-col gap-5">
       <TextInput />
       <GamePropertiesInput />
       <ResetButton />
+      <GameProgressMatchedWords 
+        matchedWords={gameData.matchedWords.size} 
+        totalWords={gameData.words.length} 
+      />
     </div>
   );
 };

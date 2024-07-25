@@ -13,7 +13,7 @@ const TextInput = () => {
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Enter' && selectedGameIndex.value !== null) {
-      const nextWordToMatch = currentGame.words.find(word => !currentGame.matchedWords.has(word[currentLanguage]));
+      const nextWordToMatch = currentGame.words.find(word => !currentGame.matchedWords.has(currentGame.words.indexOf(word)));
       if (nextWordToMatch && inputValue.trim() === nextWordToMatch[currentLanguage]) {
         matchWord(currentGame.id, inputValue.trim());
         setInputValue('');

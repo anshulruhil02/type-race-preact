@@ -8,7 +8,7 @@ interface GameAreaProps {
     words: I18nWord[];
     consoleContent: string;
     fontSize: number;
-    matchedWords: Set<string>;
+    matchedWords: Set<number>;
   };
 }
 
@@ -16,15 +16,17 @@ const GameArea = ({ gameData }: GameAreaProps) => {
   const currentLanguage = useComputed(() => language.value);
   const currentGame = games.value[selectedGameIndex.value!];
   const matchedWords = currentGame.matchedWords;
-  const nextWordToMatch = currentGame.words.find(word => !matchedWords.has(word[currentLanguage.value]));
+  const nextWordToMatchIndex = currentGame.words.findIndex(word => !matchedWords.has(currentGame.words.indexOf(word)));
+
+  const allWordsMatched = matchedWords.size === gameData.words.length;
 
   return (
-    <div className="flex-grow border border-black overflow-y-auto" style={{ maxHeight: '400px' }}>
+    <div className={`flex-grow border border-black overflow-y-auto ${allWordsMatched ? 'bg-green-300' : ''}`} style={{ maxHeight: '400px' }}>
       <ul className="flex flex-wrap gap-1 p-2">
         {gameData.words.map((word, index) => {
           const wordText = word[currentLanguage.value];
-          const isMatched = matchedWords.has(wordText);
-          const isNextToMatch = nextWordToMatch && nextWordToMatch[currentLanguage.value] === wordText;
+          const isMatched = matchedWords.has(index);
+          const isNextToMatch = index === nextWordToMatchIndex;
 
           return (
             <li
